@@ -47,6 +47,7 @@ pub mod requests {
             .text()
             .await?;
 
+        println!("{:?}", res);
         Ok(res)
     }
     /*pub async fn get_s3_link(uid: String) -> String {
