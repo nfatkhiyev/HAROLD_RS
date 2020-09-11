@@ -17,7 +17,7 @@ fn main() -> Result<()> {
         )?
         .success()?;
     for entry in rs {
-        println!("{:?}", SearchEntry::construct(entry)[0]);
+        println!("{:?}", SearchEntry::construct(entry).attrs["uid"][0]);
     }
     println!("{}", rsa);
     Ok(ldap.unbind()?)
