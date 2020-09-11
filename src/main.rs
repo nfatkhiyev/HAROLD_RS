@@ -1,10 +1,14 @@
 use ldap3::result::Result;
 use ldap3::{LdapConn, Scope, SearchEntry};
 
+mod requests;
 mod secrets;
 
 fn main() -> Result<()> {
     let harold_secrets = secrets::secrets::initialized_secrets();
+
+    let function_uid =
+        requests::requests::get_uid(harold_secrets.get_nate_ibutton(), harold_secrets);
 
     let mut ldap = LdapConn::new(harold_secrets.get_ldap_server())?;
     let _res = ldap
