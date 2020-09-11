@@ -259,6 +259,7 @@ dependencies = [
  "futures",
  "ldap3",
  "reqwest",
+ "tokio",
 ]
 
 [[package]]

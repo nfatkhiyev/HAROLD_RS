@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 futures = "0.3"
 reqwest = { version = "0.10", features = ["json"] }
+tokio = "0.2.22"
 
 [dependencies.ldap3]
 version = "0.7.1"
