@@ -21,6 +21,5 @@ fn main() -> Result<()> {
     for entry in rs {
         println!("{:?}", SearchEntry::construct(entry).attrs["uid"][0]);
     }
-    println!("{}", rsa);
     Ok(ldap.unbind()?)
 }
