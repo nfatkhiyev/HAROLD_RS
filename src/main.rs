@@ -22,4 +22,5 @@ async fn main() {
     future_music_file.await.expect("music file failed");
 
     let music_future = music::music::play_harold();
+    music_future.await;
 }
