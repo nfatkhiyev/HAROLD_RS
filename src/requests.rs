@@ -1,14 +1,19 @@
 pub mod requests {
     use crate::secrets::secrets;
     use ldap3::result;
-    use ldap3::{LdapConn, Scope, SearchEntry};
+    use ldap3::{LdapConnAsync, Scope, SearchEntry};
     use reqwest;
     use std::collections::HashMap;
 
-    pub fn get_uid(ibutton: &str, harold_secrets: secrets::Secrets) -> result::Result<String> {
-        let mut ldap = LdapConn::new(harold_secrets.get_ldap_server())?;
+    pub async fn get_uid(
+        ibutton: &str,
+        harold_secrets: secrets::Secrets,
+    ) -> result::Result<String> {
+        let (conn, mut ldap) = LdapConnAsync::new(harold_secrets.get_ldap_server()).await?;
+        ldap3::drive!(conn);
         let bind = ldap
-            .simple_bind(harold_secrets.get_ldap_dn(), harold_secrets.get_ldap_pw())?
+            .simple_bind(harold_secrets.get_ldap_dn(), harold_secrets.get_ldap_pw())
+            .await?
             .success()?;
 
         let (search, res) = ldap
@@ -17,16 +22,18 @@ pub mod requests {
                 Scope::Subtree,
                 ibutton,
                 vec!["uid"],
-            )?
+            )
+            .await?
             .success()?;
         let mut uid = SearchEntry::construct(search[0].clone()).attrs["uid"][0].clone();
 
         println!("{:?}", &uid);
 
-        ldap.unbind()?;
+        ldap.unbind().await?;
 
         Ok(uid.to_string())
     }
+
     pub async fn get_s3_link(
         uid: String,
         harold_secrets: secrets::Secrets,
