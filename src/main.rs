@@ -18,5 +18,6 @@ async fn main() {
     let used_future_s3_link = &future_s3_link.await.unwrap();
 
     let future_music_file = requests::requests::get_music_file(used_future_s3_link);
+    future_music_file.await.expect("music file failed");
     println!("{:?}", used_future_s3_link);
 }
