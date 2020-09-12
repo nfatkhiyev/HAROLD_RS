@@ -4,6 +4,8 @@ pub mod requests {
     use ldap3::{LdapConnAsync, Scope, SearchEntry};
     use reqwest;
     use std::collections::HashMap;
+    use std::fs::File;
+    use std::io;
 
     pub async fn get_uid(
         ibutton: &str,
@@ -35,7 +37,7 @@ pub mod requests {
     }
 
     pub async fn get_s3_link(
-        uid: String,
+        uid: &String,
         harold_secrets: secrets::Secrets,
     ) -> reqwest::Result<String> {
         let mut base_url: String = "https://audiophiler.csh.rit.edu/get_harold/".to_owned();
@@ -59,7 +61,12 @@ pub mod requests {
         println!("{:?}", res);
         Ok(res)
     }
-    /*pub async fn get_s3_link(uid: String) -> String {
 
-    }*/
+    pub async fn get_music_file(url: &String) -> reqwest::Result<()> {
+        let client = reqwest::Client::new();
+        let mut res = client.get(url).send().await?;
+        let mut file = File::create("music").expect("file creation failed");
+        io::copy(&mut res.bytes().await?.as_ref(), &mut file).expect("copy failed");
+        Ok(())
+    }
 }

@@ -11,8 +11,12 @@ async fn main() {
 
     let function_uid =
         requests::requests::get_uid(harold_secrets.get_nate_ibutton(), harold_secrets);
+    let used_function_uid = &function_uid.await.unwrap();
 
-    let future_s3_link =
-        requests::requests::get_s3_link(function_uid.await.unwrap(), harold_secrets);
-    println!("{:?}", future_s3_link.await.unwrap());
+    let future_s3_link = requests::requests::get_s3_link(used_function_uid, harold_secrets);
+
+    let used_future_s3_link = &future_s3_link.await.unwrap();
+
+    let future_music_file = requests::requests::get_music_file(used_future_s3_link);
+    println!("{:?}", used_future_s3_link);
 }
