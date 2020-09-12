@@ -1,19 +1,21 @@
 pub mod music {
-    use std::thread;
-    use std::time;
+    use std::{thread, time};
     use vlc::{Instance, Media, MediaPlayer};
 
-    pub async fn play_harold() {
+    pub async unsafe fn play_harold(media_name: &str, player_state_ptr: *mut bool) {
         let instance = Instance::new().unwrap();
-        let md = Media::new_path(&instance, "music").expect("path declaration failed");
-        let duration = md.duration().expect("duration failed");
-
-        println!("duration of harold is: {:?}", duration);
+        let md = Media::new_path(&instance, media_name).expect("path declaration failed");
 
         let mdp = MediaPlayer::new(&instance).unwrap();
         mdp.set_media(&md);
 
         mdp.play().unwrap();
-        thread::sleep(time::Duration::from_millis(duration as u64));
+
+        thread::sleep(time::Duration::from_millis(10));
+
+        while mdp.is_playing() {
+            *player_state_ptr = mdp.is_playing();
+            thread::sleep(time::Duration::from_millis(1));
+        }
     }
 }
