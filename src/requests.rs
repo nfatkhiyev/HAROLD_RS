@@ -45,7 +45,9 @@ pub mod requests {
         let mut params = HashMap::new();
         params.insert("auth_key", harold_secrets.get_audiophiler_secret());
 
-        let client = reqwest::Client::new();
+        let client = reqwest::Client::builder()
+            .danger_accept_invalid_certs(true)
+            .build()?;
         let res = client
             .post(&base_url)
             .json(&params)
