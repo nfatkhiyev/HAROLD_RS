@@ -266,6 +266,7 @@ dependencies = [
  "ldap3",
  "reqwest",
  "tokio",
+ "vlc-rs",
 ]
 
 [[package]]
@@ -1132,6 +1133,15 @@ name = "version_check"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b5a972e5669d67ba988ce3dc826706fb0a8b01471c088cb0b6110b805cc36aed"
+
+[[package]]
+name = "vlc-rs"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6223b2d4a7b2977e0758cbff1cb00df37236f91de4593da47f8a2737ac59a96e"
+dependencies = [
+ "libc",
+]
 
 [[package]]
 name = "want"

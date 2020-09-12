@@ -2,6 +2,7 @@ use ldap3::result::Result;
 use ldap3::{LdapConn, Scope, SearchEntry};
 use tokio::runtime::Runtime;
 
+mod music;
 mod requests;
 mod secrets;
 
@@ -19,5 +20,6 @@ async fn main() {
 
     let future_music_file = requests::requests::get_music_file(used_future_s3_link);
     future_music_file.await.expect("music file failed");
-    println!("{:?}", used_future_s3_link);
+
+    let music_future = music::music::play_harold();
 }
