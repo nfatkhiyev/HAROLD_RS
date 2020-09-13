@@ -1,5 +1,7 @@
 use ldap3::result::Result;
 use ldap3::{LdapConn, Scope, SearchEntry};
+use rppal::uart::{Parity, Queue, Uart};
+use std::{path::Path, time};
 use tokio::runtime::Runtime;
 
 mod music;
@@ -8,21 +10,37 @@ mod secrets;
 
 #[tokio::main]
 async fn main() {
-    let mut player_status: bool = false;
+    let usb_path = Path::new("/dev/ttyACM0");
 
-    let scan_complete: &'static str = "scanComplete";
-    let harold_name: &'static str = "music";
-    let mut music: &'static str = scan_complete;
+    let mut uart =
+        Uart::with_path(usb_path, 9_600, Parity::None, 8, 1).expect("uart creation failed");
 
-    let harold_secrets = secrets::secrets::initialized_secrets();
+    uart.set_read_mode(6, time::Duration::from_millis(500))
+        .expect("set read mode error");
 
-    let future_retrieve_harold = harold_retriever(harold_secrets);
+    let mut buffer = [0u8; 14];
 
-    let music_future = music::music::play_harold(music, false);
+    if uart.read(&mut buffer).unwrap() > 6 {
+        println!("{:?}", buffer);
+        uart.flush(Queue::Both).expect("uart flush failed");
+        let scan_complete: &'static str = "scanComplete";
+        let harold_name: &'static str = "music";
+        let mut music: &'static str = scan_complete;
 
-    tokio::join!(future_retrieve_harold, music_future);
+        let harold_secrets = secrets::secrets::initialized_secrets();
 
-    music = harold_name;
+        let future_retrieve_harold = harold_retriever(harold_secrets);
+
+        let scan_complete_future = music::music::play_harold(music, false);
+
+        tokio::join!(future_retrieve_harold, scan_complete_future);
+
+        music = harold_name;
+
+        let harold_future = music::music::play_harold(music, true);
+
+        harold_future.await;
+    }
 }
 
 async fn harold_retriever(harold_secrets: secrets::secrets::Secrets) {
