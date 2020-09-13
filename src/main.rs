@@ -15,34 +15,34 @@ async fn main() {
     let mut uart =
         Uart::with_path(usb_path, 9_600, Parity::None, 8, 1).expect("uart creation failed");
 
-    loop {
-        uart.set_read_mode(6, time::Duration::from_millis(500))
-            .expect("set read mode error");
+    //loop {
+    uart.set_read_mode(6, time::Duration::from_millis(500))
+        .expect("set read mode error");
 
-        //let mut buffer = [0u8; 14];
+    //let mut buffer = [0u8; 14];
 
-        //if uart.read(&mut buffer).unwrap() > 6 {
-        //println!("{:?}", buffer);
-        //uart.flush(Queue::Both).expect("uart flush failed");
-        let scan_complete: &'static str = "scanComplete";
-        let harold_name: &'static str = "music";
-        let mut music: &'static str = scan_complete;
+    //if uart.read(&mut buffer).unwrap() > 6 {
+    //println!("{:?}", buffer);
+    //uart.flush(Queue::Both).expect("uart flush failed");
+    let scan_complete: &'static str = "scanComplete";
+    let harold_name: &'static str = "music";
+    let mut music: &'static str = scan_complete;
 
-        let harold_secrets = secrets::secrets::initialized_secrets();
+    let harold_secrets = secrets::secrets::initialized_secrets();
 
-        let future_retrieve_harold = harold_retriever(harold_secrets);
+    let future_retrieve_harold = harold_retriever(harold_secrets);
 
-        let scan_complete_future = music::music::play_harold(music, false);
+    let scan_complete_future = music::music::play_harold(music, false);
 
-        tokio::join!(future_retrieve_harold, scan_complete_future);
+    tokio::join!(future_retrieve_harold, scan_complete_future);
 
-        music = harold_name;
+    music = harold_name;
 
-        let harold_future = music::music::play_harold(music, true);
+    let harold_future = music::music::play_harold(music, true);
 
-        harold_future.await;
-        //}
-    }
+    harold_future.await;
+    //}
+    //}
 }
 
 async fn harold_retriever(harold_secrets: secrets::secrets::Secrets) {
