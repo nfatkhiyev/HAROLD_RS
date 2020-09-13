@@ -9,7 +9,6 @@ mod secrets;
 #[tokio::main]
 async fn main() {
     let mut player_status: bool = false;
-    let player_status_ptr: *mut bool = &mut player_status;
 
     let scan_complete: &'static str = "scanComplete";
     let harold_name: &'static str = "music";
@@ -19,11 +18,9 @@ async fn main() {
 
     let future_retrieve_harold = harold_retriever(harold_secrets);
 
-    unsafe {
-        let music_future = music::music::play_harold(music, player_status_ptr);
+    let music_future = music::music::play_harold(music, false);
 
-        tokio::join!(future_retrieve_harold, music_future);
-    }
+    tokio::join!(future_retrieve_harold, music_future);
 
     music = harold_name;
 }
