@@ -17,11 +17,14 @@ pub mod music {
 
             thread::sleep(time::Duration::from_millis(10));
 
-            while mdp.is_playing() {
+            loop {
                 if lights {
                     set_lights(rng.gen_bool(0.5), rng.gen_bool(0.5), rng.gen_bool(0.5)).unwrap();
                 }
-                thread::sleep(time::Duration::from_millis(1));
+                thread::sleep(time::Duration::from_millis(200));
+                if !mdp.is_playing() {
+                    break;
+                }
             }
             set_lights(false, false, false).unwrap();
         });
