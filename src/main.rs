@@ -11,9 +11,9 @@ async fn main() {
     let mut player_status: bool = false;
     let player_status_ptr: *mut bool = &mut player_status;
 
-    let scan_complete: &str = "scanComplete";
-    let harold_name: &str = "music";
-    let mut music: &str = scan_complete;
+    let scan_complete: &'static str = "scanComplete";
+    let harold_name: &'static str = "music";
+    let mut music: &'static str = scan_complete;
 
     let harold_secrets = secrets::secrets::initialized_secrets();
 
