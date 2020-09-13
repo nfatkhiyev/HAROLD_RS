@@ -66,7 +66,7 @@ pub mod requests {
         let client = reqwest::Client::builder()
             .danger_accept_invalid_certs(true)
             .build()?;
-        let mut res = client.get(url).send().await?;
+        let res = client.get(url).send().await?;
         let mut file = File::create("music").expect("file creation failed");
         io::copy(&mut res.bytes().await?.as_ref(), &mut file).expect("copy failed");
         Ok(())
