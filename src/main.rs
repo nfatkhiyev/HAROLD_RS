@@ -18,12 +18,11 @@ async fn main() {
     let harold_secrets = secrets::secrets::initialized_secrets();
 
     let future_retrieve_harold = harold_retriever(harold_secrets);
-    let second_retrieve_harold = harold_retriever(harold_secrets);
 
     unsafe {
-        //let music_future = music::music::play_harold(music, player_status_ptr);
+        let music_future = music::music::play_harold(music, player_status_ptr);
 
-        tokio::join!(future_retrieve_harold, second_retrieve_harold);
+        tokio::join!(future_retrieve_harold, music_future);
     }
 
     music = harold_name;
