@@ -13,6 +13,8 @@ pub mod music {
             mdp.set_media(&md);
             mdp.play().unwrap();
 
+            let timer = time::Instant::now();
+
             let mut rng = thread_rng();
 
             thread::sleep(time::Duration::from_millis(10));
@@ -22,7 +24,7 @@ pub mod music {
                     set_lights(rng.gen_bool(0.5), rng.gen_bool(0.5), rng.gen_bool(0.5)).unwrap();
                 }
                 thread::sleep(time::Duration::from_millis(200));
-                if !mdp.is_playing() {
+                if !mdp.is_playing() || timer.elapsed().as_secs() > 30 {
                     break;
                 }
             }
