@@ -29,8 +29,6 @@ pub mod requests {
             .success()?;
         let mut uid = SearchEntry::construct(search[0].clone()).attrs["uid"][0].clone();
 
-        println!("{:?}", &uid);
-
         ldap.unbind().await?;
 
         Ok(uid.to_string())
@@ -58,7 +56,6 @@ pub mod requests {
             .text()
             .await?;
 
-        println!("{:?}", res);
         Ok(res)
     }
 
@@ -69,6 +66,27 @@ pub mod requests {
         let res = client.get(url).send().await?;
         let mut file = File::create("music").expect("file creation failed");
         io::copy(&mut res.bytes().await?.as_ref(), &mut file).expect("copy failed");
+        Ok(())
+    }
+
+    pub async fn update_jumpstart(
+        uid: &String,
+        harold_secrets: secrets::Secrets,
+    ) -> reqwest::Result<()> {
+        let mut base_url: String = "https://jumpstart.csh.rit.edu/update-harold".to_string();
+        let mut headers = reqwest::header::HeaderMap::new();
+        headers.insert(
+            reqwest::header::AUTHORIZATION,
+            reqwest::header::HeaderValue::from_static(harold_secrets.get_jumpstart_token()),
+        );
+        let mut params = HashMap::new();
+        params.insert("file_name", uid);
+        let client = reqwest::Client::builder()
+            .default_headers(headers)
+            .danger_accept_invalid_certs(true)
+            .build()?;
+        client.post(&base_url).json(&params).send().await?;
+
         Ok(())
     }
 }

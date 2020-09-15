@@ -13,6 +13,7 @@ tokio = { version = "0.2", features = ["full"] }
 vlc-rs = "0.3"
 rppal = "0.11.3"
 rand = "0.7.3"
+serialport = "3.3.0"
 
 [dependencies.ldap3]
 version = "0.7.1"
