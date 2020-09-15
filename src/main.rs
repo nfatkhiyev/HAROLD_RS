@@ -46,13 +46,13 @@ async fn main() {
 
                         let function_uid =
                             requests::requests::get_uid(i_button_complete.as_str(), harold_secrets);
-                        let used_function_uid = &function_uid.await.unwrap();
+                        let used_function_uid = function_uid.await.unwrap();
 
                         match used_function_uid.as_str() {
                             "" => (),
                             _ => {
                                 let future_retrieve_harold =
-                                    harold_retriever(used_function_uid, harold_secrets);
+                                    harold_retriever(&used_function_uid, harold_secrets);
 
                                 let scan_complete_future = music::music::play_harold(music, false);
 
