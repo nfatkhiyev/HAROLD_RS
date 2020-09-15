@@ -37,8 +37,9 @@ async fn main() {
                     "ready" => (),
                     _ => {
                         let i_button_code = msg.split_off(2);
-                        let mut i_button_complete: String = "*".to_string();
+                        let mut i_button_complete: String = "(ibutton=*".to_string();
                         i_button_complete.push_str(i_button_code.as_str());
+                        i_button_complete.push_str(")");
 
                         let scan_complete: &'static str = "scanComplete";
                         let harold_name: &'static str = "music";
