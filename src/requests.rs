@@ -28,7 +28,6 @@ pub mod requests {
             .await?
             .success()?;
         let mut uid = SearchEntry::construct(search[0].clone()).attrs["uid"][0].clone();
-        println!("{:?}", uid.to_string());
 
         ldap.unbind().await?;
 
