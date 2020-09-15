@@ -2,7 +2,7 @@ use ldap3::result::Result;
 use ldap3::{LdapConn, Scope, SearchEntry};
 use serialport::{DataBits, FlowControl, Parity, SerialPortSettings, StopBits};
 use std::io::{self, BufRead, BufReader, ErrorKind};
-use std::{path::Path, time};
+use std::{path::Path, thread, time};
 use tokio::runtime::Runtime;
 
 mod music;
@@ -64,6 +64,7 @@ async fn main() {
                                 let harold_future = music::music::play_harold(music, true);
 
                                 harold_future.await;
+                                thread::sleep(time::Duration::from_millis(2));
                             }
                         }
                     }
