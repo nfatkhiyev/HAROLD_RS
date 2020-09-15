@@ -64,7 +64,7 @@ async fn main() {
                                 let harold_future = music::music::play_harold(music, true);
 
                                 harold_future.await;
-                                thread::sleep(time::Duration::from_millis(2));
+                                thread::sleep(time::Duration::from_secs(2));
                             }
                         }
                     }
