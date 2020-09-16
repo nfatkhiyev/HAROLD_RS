@@ -7,6 +7,7 @@ pub mod requests {
     use std::fs::File;
     use std::io;
 
+    //search LDAP for uid filtered by iButton. Returns UID in Result
     pub async fn get_uid(
         ibutton: &str,
         harold_secrets: secrets::Secrets,
@@ -27,19 +28,20 @@ pub mod requests {
             )
             .await?
             .success()?;
-        let mut uid = SearchEntry::construct(search[0].clone()).attrs["uid"][0].clone();
+        let uid = SearchEntry::construct(search[0].clone()).attrs["uid"][0].clone();
 
         ldap.unbind().await?;
 
         Ok(uid.to_string())
     }
 
+    //makes call to audiophiler with UID to get s3 link. Returns s3 link in Result
     pub async fn get_s3_link(
         uid: &String,
         harold_secrets: secrets::Secrets,
     ) -> reqwest::Result<String> {
         let mut base_url: String = "https://audiophiler.csh.rit.edu/get_harold/".to_owned();
-        let mut uid: &str = &uid;
+        let uid: &str = &uid;
         base_url.push_str(uid);
 
         let mut params = HashMap::new();
@@ -59,6 +61,7 @@ pub mod requests {
         Ok(res)
     }
 
+    //dl music file from s3 bucket
     pub async fn get_music_file(url: &String) -> reqwest::Result<()> {
         let client = reqwest::Client::builder()
             .danger_accept_invalid_certs(true)
@@ -69,11 +72,12 @@ pub mod requests {
         Ok(())
     }
 
+    //request to update jupstart with users UID
     pub async fn update_jumpstart(
         uid: &String,
         harold_secrets: secrets::Secrets,
     ) -> reqwest::Result<()> {
-        let mut base_url: String = "https://jumpstart.csh.rit.edu/update-harold".to_string();
+        let base_url: String = "https://jumpstart.csh.rit.edu/update-harold".to_string();
         let mut headers = reqwest::header::HeaderMap::new();
         headers.insert(
             reqwest::header::AUTHORIZATION,
