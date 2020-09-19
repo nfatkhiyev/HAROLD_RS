@@ -67,14 +67,17 @@ async fn main() {
                                 let scan_complete_future = music::music::play_harold(music, false);
                                 //dl harold and play scanComplete.
                                 //TODO: investigate dl on separate thread
-                                tokio::join!(future_retrieve_harold, scan_complete_future);
+                                let (_, scan_complete_join_handle) =
+                                    tokio::join!(future_retrieve_harold, scan_complete_future);
+                                scan_complete_join_handle.join().unwrap();
 
                                 //change music file name to harold file name
                                 music = harold_name;
 
                                 //play harold
                                 let harold_future = music::music::play_harold(music, true);
-                                harold_future.await;
+                                let harold_join_handle = harold_future.await;
+                                harold_join_handle.join().unwrap();
                                 //wait 2 seconds before looping
                                 thread::sleep(time::Duration::from_secs(2));
                             }

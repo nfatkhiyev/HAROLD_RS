@@ -6,8 +6,8 @@ pub mod music {
 
     //plays music and flashes lights. Returns void
     //TODO: add serial LED strip to the lights sequence and double check functionality
-    pub async fn play_harold(media_name: &'static str, lights: bool) {
-        thread::spawn(move || {
+    pub async fn play_harold(media_name: &'static str, lights: bool) -> thread::JoinHandle<()> {
+        let handle = thread::spawn(move || {
             let instance = Instance::new().unwrap();
             let md = Media::new_path(&instance, media_name).expect("path declaration failed");
 
@@ -32,6 +32,7 @@ pub mod music {
             }
             set_lights(false, false, false).unwrap();
         });
+        return handle;
     }
 
     //sets the state of the light bar. Returns void
