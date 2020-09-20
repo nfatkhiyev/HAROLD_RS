@@ -29,6 +29,7 @@ async fn main() {
 
     //main loop
     loop {
+        music::music::set_lights(false, false, false).unwrap();
         let mut msg = String::new();
 
         //match line read from iButton reader. Must be matched or main will panic due to timeout
